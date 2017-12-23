@@ -25,3 +25,7 @@ ListOfFiles.txt: contains the list of files to be requested, one on each line
 ### For non-persistent connections:
 	
 	./Client server_IP/hostname server_portNo np filename
+
+## Screenshot:
+
+<img src="https://github.com/rachhshruti/file-transfer-tcp/blob/master/images/file-transfer-tcp-output.png" width="1000" height="600" align="center"/>

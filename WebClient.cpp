@@ -91,7 +91,6 @@ void WebClient::setServerAddress(int portNo)
 	serverAddress.sin_family = AF_INET;
 	bcopy((char *)server->h_addr,(char *)&serverAddress.sin_addr.s_addr,server->h_length);
 	serverAddress.sin_port = htons(portNo);
-
 }
 
 /**
@@ -261,8 +260,8 @@ int main(int noOfArguments,char *argumentList[])
 	WebClient client;
 	string connectionType;
 	/*
-         * It checks if all the command-line arguments are provided.
-         */	
+     * It checks if all the command-line arguments are provided.
+     */	
 	if(noOfArguments<5)
 	{
 		client.displayError("Invalid arguments!");
@@ -272,11 +271,11 @@ int main(int noOfArguments,char *argumentList[])
 	client.getServerInfo(argumentList[1]);
 	client.setServerAddress(portNo);
 	client.connectToServer();
-	string filename=argumentList[4];
+	string filename="files/"+string(argumentList[4]);
 	
 	/*
    	 * Checks if the client has requested for persistent or non-persistent connection.
-    	 */	
+     */	
 	if(strcmp(argumentList[3],"p")==0)
 	{
 		connectionType="keep-alive";
@@ -286,15 +285,14 @@ int main(int noOfArguments,char *argumentList[])
 	  	double elapsedTime;
 	  	gettimeofday(&t1, NULL);
 	  	for(int i=0;i<fileList.number;i++)
-	  	{
-			
-	    		if(i==(fileList.number-1))
-	    		{
-	      			connectionType="close";
-	    		}
-	    		string request=client.createRequest(fileList.lines[i],connectionType);
-	    		int noOfBytesSent=client.sendRequest(request);
-	    		int noOfBytesRecvd=client.readResponse();
+	  	{	
+	    	if(i==(fileList.number-1))
+	    	{
+	      		connectionType="close";
+	    	}
+	    	string request=client.createRequest(fileList.lines[i],connectionType);
+	    	int noOfBytesSent=client.sendRequest(request);
+	    	int noOfBytesRecvd=client.readResponse();
 			cout<<"No of bytes received for file "<<fileList.number<< " : "<<noOfBytesRecvd<<endl;	
 	  	}
 	  	gettimeofday(&t2, NULL);	  	

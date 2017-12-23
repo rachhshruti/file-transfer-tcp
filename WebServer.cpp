@@ -159,7 +159,6 @@ string* WebServer::processRequest()
 	char *req=strtok(buff,"/");
 	if(req)
 	{
-		
 		req=strtok(NULL," ");
 		if(req)
 		{
@@ -180,7 +179,7 @@ string* WebServer::processRequest()
 		statusCode="400";
 	}
 	string* values=new string[4];
-	values[0]=filename;
+	values[0]="files/"+string(filename);
 	values[1]=httpVersion;
 	values[2]=connectionType;
 	values[3]=statusCode;
@@ -377,13 +376,12 @@ void* handleClientConn(void *clientSocketDesc)
 	int sock = *(int*)clientSocketDesc;
   	bool flag=true;  	
 	int no=server.readClientRequest(sock);
-    	string* values=server.processRequest();
+    string* values=server.processRequest();
 	server.setHttpStatusCodes();	
 	while(values[2].find("keep-alive")!=string::npos)
   	{
-    		   
-    		size_t dotPos=values[0].find(".");
-    		string fileExt=values[0].substr(dotPos);
+    	size_t dotPos=values[0].find(".");
+    	string fileExt=values[0].substr(dotPos);
 		
 		string statusCode;	
 		if(strcmp(values[3].c_str(),"400")!=0)
@@ -393,28 +391,26 @@ void* handleClientConn(void *clientSocketDesc)
 		{	
 			statusCode=values[3];
 		}		
-    		string response=server.createResponse(statusCode,values[1],fileExt);
-    		int noOfChar=server.sendResponse(response,sock);
+    	string response=server.createResponse(statusCode,values[1],fileExt);
+    	int noOfChar=server.sendResponse(response,sock);
 		no=server.readClientRequest(sock);
-    		values=server.processRequest();
-    		 
+    	values=server.processRequest();	 
   	}
 	if(values[2].find("close")!=string::npos)
 	{
 		size_t dotPos=values[0].find(".");
-    		string fileExt=values[0].substr(dotPos);
+    	string fileExt=values[0].substr(dotPos);
 		string statusCode;
 			
 		if(strcmp(values[3].c_str(),"400")!=0)
 		{ 		
-			statusCode=server.getRequestedContent(values[0]);
-			
+			statusCode=server.getRequestedContent(values[0]);	
 		}else
 		{	
 			statusCode=values[3];
 		}		
-    		string response=server.createResponse(statusCode,values[1],fileExt);
-    		int noOfChar=server.sendResponse(response,sock);
+    	string response=server.createResponse(statusCode,values[1],fileExt);
+    	int noOfChar=server.sendResponse(response,sock);
 	}
   	server.closeClientConnection();
 }
@@ -424,8 +420,8 @@ int main(int noOfArguments,char *argumentList[])
 	WebServer server;
   	pthread_t clientThread;
 	/*
-         * It checks if all the command-line arguments are provided.
-         */	
+     * It checks if all the command-line arguments are provided.
+     */	
 	if(noOfArguments<2)
 	{
 		server.displayError("The client must provide a port number!");
@@ -442,12 +438,12 @@ int main(int noOfArguments,char *argumentList[])
   	{
 		clientSocket=server.acceptConn();
 	  	int *tmpClientSock=&clientSocket;
-    		if(pthread_create( &clientThread , NULL , handleClientConn , (void*) tmpClientSock )< 0)
-    		{
-      			server.displayError("The thread could not be created!");
-    		}
-    		pthread_detach(clientThread);
-    		server.listenConn();
+    	if(pthread_create( &clientThread , NULL , handleClientConn , (void*) tmpClientSock )< 0)
+    	{
+      		server.displayError("The thread could not be created!");
+    	}
+    	pthread_detach(clientThread);
+    	server.listenConn();
   	}
 	if(clientSocket<0)
 	{
