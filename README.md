@@ -2,13 +2,22 @@
 
 Developed a multi-threaded web server which accepts persistent and non-persistent file request connections from web client as well as from the browser.
 
-# Requirements
-
-- Linux operating system
-
 # Running the code
 
-Compile the code by typing the following command in the terminal: make
+## Creating and configuring virtual machines
+	
+	vagrant up
+   
+   This will boot both the server and client machines
+
+## SSH into virtual machines
+	
+	vagrant ssh tcpserver
+	vagrant ssh tcpclient
+   
+## Compile the code
+	
+	make
 
 ## Run the WebServer:
 
